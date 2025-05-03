@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Exceptions
 {
-    public class ProductType: BaseEntity<int>
+    public abstract class NotFoundException(string message):Exception(message)
     {
-        public string Name { get; set; } = null!;
-
     }
 }

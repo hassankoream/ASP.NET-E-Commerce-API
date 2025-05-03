@@ -11,18 +11,54 @@ namespace Services.Specifications
 {
     abstract class BaseSpecifications<TEntity, Tkey> : ISpecifications<TEntity, Tkey> where TEntity : BaseEntity<Tkey>
     {
-        public Expression<Func<TEntity, bool>> Criteria { get; private set; }
-
-        public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = [];
-        protected BaseSpecifications(Expression<Func<TEntity, bool>> CriteriaExpression)
+        protected BaseSpecifications(Expression<Func<TEntity, bool>>? CriteriaExpression)
         {
             Criteria = CriteriaExpression;
         }
-  
+        public Expression<Func<TEntity, bool>>? Criteria { get; private set; }
 
-        protected void AddInclude (Expression<Func<TEntity, object>> IncludeExpression)
+        #region Include
+        public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = [];
+        protected void AddInclude(Expression<Func<TEntity, object>> IncludeExpression)
         {
             IncludeExpressions.Add(IncludeExpression);
         }
+        #endregion
+
+        #region Sorting
+        public Expression<Func<TEntity, object>> OrderBy { get; private set; }
+
+        public Expression<Func<TEntity, object>> OrderByDescending { get; private set; }
+
+
+        protected void AddOrderBy (Expression<Func<TEntity, object>> OrderByExpression)
+        {
+            OrderBy = OrderByExpression;
+        }
+        protected void AddOrderByDesc(Expression<Func<TEntity, object>> OrderByDescExpression)
+        {
+            OrderByDescending = OrderByDescExpression;
+        }
+        #endregion
+
+        #region Pagination 
+
+
+        public int Take { get; private set; }
+
+        public int Skip { get; private set; }
+
+        public bool IsPaginate { get; set; }
+
+        public void ApplyPagination(int PageSize, int PageIndex)
+        {
+            IsPaginate = true;
+            Take = PageSize;
+            Skip =(PageIndex - 1) * PageSize;
+        }
+        #endregion
+
+
+
     }
 }

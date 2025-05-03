@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Models.ProductModule
 {
-    public class Product:BaseEntity<int>
+    public class Product : BaseEntity<int>
     {
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;

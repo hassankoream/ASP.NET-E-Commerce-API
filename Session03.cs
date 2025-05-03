@@ -316,5 +316,127 @@ Which way feels better for you right now?
 
 
         #endregion
+
+        #region Part 03 Specification [All Products - Product By Id]
+
+        /*
+         
+        -Create Class ProductWithBrndAndTypeSpecifications in order to use GetAll with brand and type included
+        -Make two constructors in that class for both methods
+        -Go to Product Service and use the method that takes one parameter called Specifications
+        
+        **Start by asking what do you need?
+        *I need to get products with brand and type
+        *I need to make it Dynamic so I can Add more tables in the future without modifying the query over again.
+        *I need to follow the Specification Design pattern as it is and see how they solved the problem.
+        *Start with controller > service > repository > Add one more method that takes Specification as a parameter.
+        *
+        *
+
+         
+         */
+        #endregion
+
+        #region Part 04 Filtration Specifications
+
+        /*
+         
+        -Modify the Controller Get All Products to have more parameters for filtration based on Brand and Type if needed
+        -Modify Service to Include the new parameters.
+        -Modify ProductWithBrndAndTypeSpecifications  to Include the new parameters.
+
+         
+         */
+
+        #endregion
+        #region Part 05 Sorting Specifications
+
+        /*
+         
+        -From ISpecifications Add two more properties for ordering
+        -Implement the two added properties into  BaseSpecifications
+        -Add new enum for productSortingOptions in the shared program
+        -Add this to Controller > service > ProductWithBrndAndTypeSpecifications
+        -use switch case to Add the all sorting options required
+        -Add OrderBy and  OrderByDesc to your query creation in the SpecificationsEvaluator before Include
+   
+
+
+
+         
+         
+         */
+
+        #endregion
+        #region Part 06 Product Query Parameters
+
+        /*
+        
+        If your function has more than 3 params, start to make an object and add the params to it.
+
+        -Create ProductQueryParams class in the shared folder
+        -Send an object from this class to Controller > Service > ProductWithBrndAndTypeSpecifications
+        - change the controller to accept fromQuery Annotation
+         
+
+
+         */
+
+        #endregion
+        #region Part 07 Search Specification
+        /*
+         
+        Add new property inside the ProductQueryParams class for the search value
+        -Add the search property to the Criteria
+         
+         
+         */
+        #endregion
+        #region Part 08 Pagination
+
+        /*
+         
+        those new properties will be  part of the query itself (Changes should be in ISpecifications, BaseSpecifications, )
+        - Using keywords like (Skip and Take) to determine the page size and the page Index
+        - Add two more properties to the ISpecifications interface
+        - Go to BaseSpecifications and Add the Implementation, add new method to apply pagination.
+        - Go to ProductWithBrndAndTypeSpecifications and add ApplyPagination after switch
+        - Go to ProductQueryParams and Add two properties from the query
+        - Go to SpecificationsEvaluator and Add the missing properties to update the query
+         
+         
+         
+         
+         */
+
+        #endregion
+
+        #region Part 09 Paginated Result
+        /*
+         
+        Create new class called PaginatedResult in the shared folder, holding data of pagination.
+        Update IproductService and productService to match the return result of the new object.
+
+         
+         
+         */
+
+        #endregion
+
+        #region Part 10 Count Specifications
+        /*
+         
+         
+        -Go to IGenericRepository and add new method for Count
+        -Go to GenericRepository to Implement the method 
+        -In ProductService Add the new way for the count
+        -need another Specifications without the Pagination Applied to the result.
+        -We need a new Specifications for the Count Method called ProductCountSpecification and inherit from BaseSpecifications
+        -After that Modify the total count in the service class
+         
+         
+         */
+
+        #endregion
     }
 }

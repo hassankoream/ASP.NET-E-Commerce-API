@@ -21,7 +21,10 @@ namespace Domain.Contracts
 
 
         //With Specifications
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, Tkey>> specifications);
-        Task<TEntity?> GetByIdAsync(Expression<Func<TEntity, Tkey>> specifications);
+        Task<IEnumerable<TEntity>> GetAllAsync(ISpecifications<TEntity, Tkey> specifications);
+        Task<TEntity?> GetByIdAsync(ISpecifications<TEntity, Tkey> specifications);
+
+
+        Task<int> CountAsync(ISpecifications<TEntity, Tkey> specifications);
     }
 }

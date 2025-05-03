@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Shared.DataTransferObjects;
+using Shared;
+using Shared.DataTransferObjects.ProductmoduleDtos;
 
 namespace ServicesAbstractions
 {
@@ -13,7 +14,7 @@ namespace ServicesAbstractions
 
         //GET ALL Products
 
-        Task<IEnumerable<ProductDto>> GetAllProductsAsync();
+        Task<PaginatedResult<ProductDto>> GetAllProductsAsync(ProductQueryParams productQueryParams);
 
         //GET Product by ID
 
