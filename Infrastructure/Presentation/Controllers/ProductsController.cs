@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAbstractions;
 using Shared;
@@ -15,7 +16,7 @@ namespace Presentation.Controllers
     public class ProductsController(IServiceManager _serviceManager): ControllerBase
     {
         //Building the methods
-
+        [Authorize(Roles = "Admin")] //only allow admin role to access this endpoint, using its token 
         //GetAllProducts
         [HttpGet] //Get: BaseUrl/api/Products
 

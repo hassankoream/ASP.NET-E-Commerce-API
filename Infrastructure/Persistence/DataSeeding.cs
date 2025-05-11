@@ -5,13 +5,23 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Domain.Contracts;
+using Domain.Models.IdentityModule;
 using Domain.Models.ProductModule;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
+using Persistence.Identity;
 
 namespace Persistence
 {
-    public class DataSeeding(StoreDbContext _dbContext) : IDataSeeding
+    public class DataSeeding
+        (
+        StoreDbContext _dbContext,
+        UserManager<ApplicationUser> _userManager,
+        RoleManager<IdentityRole> _roleManager,
+        StoreIdentityDbContext _IdentitydbContext
+        )
+        : IDataSeeding
     {
         public async Task DataSeedAsync()
         {
@@ -20,7 +30,7 @@ namespace Persistence
                 var PendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
                 if ((PendingMigrations).Any())
                 {
-                   await _dbContext.Database.MigrateAsync();
+                    await _dbContext.Database.MigrateAsync();
 
                 }
 
@@ -28,13 +38,13 @@ namespace Persistence
                 if (!_dbContext.ProductBrands.Any())
                 {
                     //var ProductBrandData = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\DataSeed\brands.json");
-                    var ProductBrandData =  File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\brands.json");
+                    var ProductBrandData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\brands.json");
 
                     //Convert String to C# Objects
                     var ProductBrands = await JsonSerializer.DeserializeAsync<List<ProductBrand>>(ProductBrandData);
                     if (ProductBrands is not null && ProductBrands.Any())
                     {
-                       await _dbContext.ProductBrands.AddRangeAsync(ProductBrands);
+                        await _dbContext.ProductBrands.AddRangeAsync(ProductBrands);
 
                         //_dbContext.SaveChanges(); Wait to Add others
 
@@ -49,7 +59,7 @@ namespace Persistence
                     var ProductTypes = await JsonSerializer.DeserializeAsync<List<ProductType>>(ProductTypeData);
                     if (ProductTypes is not null && ProductTypes.Any())
                     {
-                       await _dbContext.ProductTypes.AddRangeAsync(ProductTypes);
+                        await _dbContext.ProductTypes.AddRangeAsync(ProductTypes);
 
                         //_dbContext.SaveChanges(); Wait to Add others
 
@@ -65,7 +75,7 @@ namespace Persistence
                     var Products = await JsonSerializer.DeserializeAsync<List<Product>>(ProductData);
                     if (Products is not null && Products.Any())
                     {
-                       await _dbContext.Products.AddRangeAsync(Products);
+                        await _dbContext.Products.AddRangeAsync(Products);
 
                         //_dbContext.SaveChanges(); Wait to Add others
 
@@ -74,13 +84,69 @@ namespace Persistence
                 }
 
 
-              await  _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 //TODO
 
             }
+        }
+
+        //Seeding requirements:
+        //1-Add Roles
+        //2-Add users
+        //3-Add passwords
+        //4-Assign Roles to Users
+        public async Task IdentityDataSeedAsync()
+        {
+            try
+            {
+                //1-Add Roles
+
+                if (!_roleManager.Roles.Any())
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                    await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+                }
+                //2-Add users
+                if (!_userManager.Users.Any())
+                {
+                    var User01 = new ApplicationUser()
+                    {
+                        Email = "Mohamed@gmail.com",
+                        DisplayName = "Mohamed Tarek",
+                        PhoneNumber = "0123456789",
+                        UserName = "MohamedTarek"
+                    };
+                    var User02 = new ApplicationUser()
+                    {
+                        Email = "Salma@gmail.com",
+                        DisplayName = "Salma Hassan",
+                        PhoneNumber = "0123456789",
+                        UserName = "SalmaHassan"
+                    };
+
+                    //to hash passwords using create
+                    await _userManager.CreateAsync(User01, "P@ssw0rd");
+                    await _userManager.CreateAsync(User02, "P@ssw0rd");
+
+                    //Assign Roles
+
+                    await _userManager.AddToRoleAsync(User01, "Admin");
+                    await _userManager.AddToRoleAsync(User01, "SuperAdmin");
+
+                }
+
+
+                await _IdentitydbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
         }
     }
 }

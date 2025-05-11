@@ -55,7 +55,7 @@ namespace E_Commerce.Web
             //{
             //    //Cleaner
             //    Options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationErrorsResponse;
-                
+
 
             //    //Old
             //    //(Context) =>
@@ -73,6 +73,8 @@ namespace E_Commerce.Web
             //    //    return new BadRequestObjectResult(Response);
             //    //};
             //});
+
+            builder.Services.AddJwtServices(builder.Configuration);
 
 
             #endregion
@@ -118,8 +120,8 @@ namespace E_Commerce.Web
 
             //for files in your projects
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthorization();
-
 
             app.MapControllers(); 
             #endregion

@@ -1,6 +1,10 @@
 ﻿
 
+using Domain.Models.IdentityModule;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Persistence.Identity;
 using StackExchange.Redis;
 
 namespace Persistence
@@ -22,7 +26,25 @@ namespace Persistence
             {
                 return ConnectionMultiplexer.Connect(Configuration.GetConnectionString("RedisConnection"));
             });
+            Services.AddDbContext<StoreIdentityDbContext>(Options =>
+            {
+                Options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"));
+            });
 
+
+
+            Services.AddIdentityCore<ApplicationUser>()
+
+
+            //(Options =>
+            //{
+            //    //Options.User.RequireUniqueEmail = true;
+            //    //Options.Password.RequireNonAlphanumeric = false;
+            //    //Options.Lockout;
+                    
+            //})
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreIdentityDbContext>();
             return Services;
         }
     }
