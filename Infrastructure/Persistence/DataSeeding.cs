@@ -83,7 +83,21 @@ namespace Persistence
 
                 }
 
+                if (!_dbContext.Set<DeliveryMethod>().Any())
+                {
+                    var DeilveryMethodData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\delivery.json");
 
+                    //Convert String to C# Objects
+                    var DeliveryMethods = await JsonSerializer.DeserializeAsync<List<DeliveryMethod>>(DeilveryMethodData);
+                    if (DeliveryMethods is not null && DeliveryMethods.Any())
+                    {
+                        await _dbContext.Set<DeliveryMethod>().AddRangeAsync(DeliveryMethods);
+
+                        //_dbContext.SaveChanges(); Wait to Add others
+
+                    }
+
+                }
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
